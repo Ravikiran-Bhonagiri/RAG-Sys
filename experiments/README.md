@@ -16,6 +16,7 @@ Before selecting our current custom pipeline, we evaluated several popular libra
 |---------|------|------|------|---------|
 | **Unstructured** | All-in-one | Handles everything (PDF, PPT, HTML), great table extraction | Heavy dependencies, slow on CPU, complex setup | **Skipped** (Too heavy) |
 | **PyMuPDF4LLM** | PDF Text Helper | Easy Markdown conversion, fast | Limited control over image extraction/captioning | **Skipped** (Not flexible enough) |
+| **pypdf** | Pure Python Parser | Simple, no C++ dependencies | Poor layout analysis (linear text), basic image extraction | **Skipped** (Too basic) |
 | **LlamaParse** | API Service | State-of-the-art table parsing | Paid API, data privacy concerns, rate limits | **Skipped** (Prefer local) |
 | **Custom PyMuPDF** | **Selected** | **Full control**, lightweight, free, exact image extraction | Requires custom code for layout analysis | **CHOSEN** |
 
@@ -38,7 +39,17 @@ A specialized wrapper around PyMuPDF designed for RAG.
     *   **Image Handling**: While it extracts images, integrating custom VLM captioning into its pipeline is less straightforward than raw PyMuPDF.
     *   **Black Box**: Less granular control over exactly how text is grouped.
 
-### 3. Custom PyMuPDF + VLM (Our Approach)
+### 3. pypdf (`pypdf`)
+
+A classic pure-Python PDF library.
+
+*   **What it does**: Reads PDF objects directly without C++ dependencies.
+*   **Why we moved away**:
+    *   **Layout Analysis**: Treats text as a linear stream, often merging columns or headers/footers incorrectly.
+    *   **Image Extraction**: Can extract images, but often loses context or splits distinct visual elements.
+    *   **Performance**: Pure Python is slower than PyMuPDF's C bindings for heavy processing.
+
+### 4. Custom PyMuPDF + VLM (Our Approach)
 
 We built a custom pipeline using raw `fitz` (PyMuPDF).
 
