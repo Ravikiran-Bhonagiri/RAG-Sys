@@ -1,4 +1,4 @@
-# Production RAG System
+# RAG System
 
 A production-grade, multi-provider Retrieval Augmented Generation (RAG) system with comprehensive multi-modal capabilities.
 
